@@ -28,7 +28,7 @@ jobs:
           echo "👤 Desplegando cambios realizados por: $AUTHOR"
           echo "🗂️ Subiendo archivos a S3..."
 
-      - name: 🌐 Deploy to AWS S3
+      - name: 🌐 Deploy to AWSS3
         run: |
           aws s3 sync . s3://raynerproject.click --delete
           echo "✅ Archivos sincronizados correctamente por $AUTHOR"
