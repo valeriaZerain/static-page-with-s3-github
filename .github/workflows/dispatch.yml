@@ -1,0 +1,38 @@
+name: 🚀 Desplegar página estática manualmente
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Probando el workflow dispatch"
+        required: true
+        default: "oficial"
+      customMessage:
+        description: "Se está desplegando la página de pruebaaaa"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🕵️‍♂️ Obtener inputs
+        run: |
+          echo "Entorno: ${{ github.event.inputs.environment }}"
+          echo "Mensaje: ${{ github.event.inputs.customMessage || 'No se proporcionó un mensaje personalizado' }}"
+
+      - name: 🔧 Configurar AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: 🌐 Deploy a S3
+        run: |
+          echo "Iniciando despliegue en entorno ${{ github.event.inputs.environment }} 🚀"
+          aws s3 sync . s3://static-page-with-github --delete
+          echo "✅ Despliegue completado en ${{ github.event.inputs.environment }}"
