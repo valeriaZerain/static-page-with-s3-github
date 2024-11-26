@@ -30,7 +30,7 @@ jobs:
 
       - name: 🌐 Deploy to AWSS3
         run: |
-          aws s3 sync . s3://raynerproject.click --delete
+          aws s3 sync . s3://static-page-with-github --delete
           echo "✅ Archivos sincronizados correctamente por $AUTHOR"
 
       - name: 🎯 Confirm deployment
