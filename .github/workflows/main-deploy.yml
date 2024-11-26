@@ -1,0 +1,40 @@
+name: 🚀 Desplegando página estática en S3 (Parte 2)
+on:
+  push:
+    branches:
+      - oficial
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: 🕵️‍♂️ Get commit author
+        run: echo "AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
+
+      - name: 📢 Display deployment message
+        run: |
+          echo "🎉 ¡Hora de desplegar! 🚀"
+          echo "👤 Desplegando cambios realizados por: $AUTHOR"
+          echo "🗂️ Subiendo archivos a S3..."
+
+      - name: 🌐 Deploy to AWS S3
+        run: |
+          aws s3 sync . s3://raynerproject.click --delete
+          echo "✅ Archivos sincronizados correctamente por $AUTHOR"
+
+      - name: 🎯 Confirm deployment
+        run: |
+          echo "🎊 ¡Despliegue completado con éxito! 🌟"
+          echo "📦 Tu página estática ya está disponible en S3"
+          echo "🎉 Desplegado por: $AUTHOR"
